@@ -8,7 +8,7 @@ export interface FormConfig<TName = string> {
   shouldUnregister?: boolean;
   requiredFields?: Record<string, any>;
   onChangeField?: (name: string, value: any) => void;
-  render?: (props: FormRenderProps) => React.ReactElement;
+  render: (props: FormRenderProps) => React.ReactNode;
 }
 
 export type FormType = Record<FormField["name"], any>;

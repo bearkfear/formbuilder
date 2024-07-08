@@ -1,24 +1,25 @@
 {
-	"name": "formbuilder",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"devDependencies": {
-		"@biomejs/biome": "^1.8.3",
-		"@types/node": "^20.14.9",
-		"@types/react": "^18.3.3",
-		"@types/react-dom": "^18.3.0",
-		"typescript": "^5.5.3"
-	},
-	"dependencies": {
-		"react": "^18.3.1",
-		"react-hook-form": "^7.52.1",
-		"zod": "^3.23.8"
-	}
+  "name": "@continha/formbuilder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "camponogara5@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3",
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-hook-form": "^7.52.1",
+    "zod": "^3.23.8"
+  }
 }

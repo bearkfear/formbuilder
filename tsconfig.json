@@ -4,7 +4,7 @@
 		"module": "commonjs", // Specify module code generation
 		"lib": ["dom", "es2015"], // Specify library files to be included
 		"allowJs": true, // Allow JavaScript files to be compiled
-		"jsx": "react", // Specify JSX code generation
+		"jsx": "react-jsx", // Specify JSX code generation
 		"declaration": true, // Generates corresponding '.d.ts' file
 		"outDir": "dist", // Redirect output structure to the directory
 		"rootDir": "lib", // Specify the root directory of input files
