@@ -1,7 +1,10 @@
 import type { FieldSettingsByType } from "./field-settings-by-type";
 import type { Rule } from "./rule";
+import type { ValidateFieldResult } from "./types";
 
 export type FormField<FieldName = string> = {
+  hidden?: boolean;
+  validate?: (value: any) => ValidateFieldResult;
   name: FieldName;
   label: string;
   required?: boolean;

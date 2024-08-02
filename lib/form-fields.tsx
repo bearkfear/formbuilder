@@ -14,7 +14,10 @@ export function FormFields({
   return (
     <>
       {fields.map((fieldConfig) => {
-        if (isRulesValid(fieldConfig, requiredFields || {}) === false) {
+        if (
+          fieldConfig.hidden ||
+          isRulesValid(fieldConfig, requiredFields || {}) === false
+        ) {
           return null;
         }
 
