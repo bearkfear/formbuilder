@@ -28,13 +28,15 @@ function FieldController<TFieldValues extends FieldValues = FieldValues>({
 	const isActive = useMemo(() => {
 		if (
 			fieldConfig.hidden ||
-			isRulesValid(fieldConfig, requiredFields || {}) === false
+			isRulesValid(fieldConfig, requiredFields || {}) === false ||
+			!fieldState ||
+			(fieldState && fieldState.active === false)
 		) {
 			return false;
 		}
 
 		return true;
-	}, [requiredFields, fieldConfig]);
+	}, [requiredFields, fieldConfig, fieldState]);
 
 	useEffect(() => {
 		if (!fieldState) {
