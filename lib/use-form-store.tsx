@@ -12,11 +12,13 @@ export type FormStoreItem = {
 
 export type FormStore = Record<string, FormStoreItem>;
 
+export type Store = UseBoundStore<StoreApi<FormStore>>;
+
 function storeGenerator() {
 	return create<Record<string, FormStoreItem>>(() => ({}));
 }
 
-export const formStore = createContext<UseBoundStore<StoreApi<FormStore>>>(
+export const formStore = createContext<Store>(
 	storeGenerator(),
 );
 

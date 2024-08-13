@@ -10,3 +10,4 @@ export * from "./model/form-render-props";
 export * from "./model/option";
 export * from "./model/rule";
 export * from "./model/types";
+export * from "./use-form-store";

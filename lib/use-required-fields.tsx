@@ -41,8 +41,9 @@ export function useRequiredFieldsByRules(
 		>((acc, curr, index) => {
 			acc[requiredFieldNames[index]] = {
 				active:
-					formStoreState[requiredFieldNames[index]] &&
-					formStoreState[requiredFieldNames[index]].active,
+					!formStoreState[requiredFieldNames[index]] ||
+					(formStoreState[requiredFieldNames[index]] &&
+						formStoreState[requiredFieldNames[index]].active),
 				value: curr,
 			};
 			return acc;
