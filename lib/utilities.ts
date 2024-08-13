@@ -1,3 +1,4 @@
+import type { FieldNamesMarkedBoolean, FieldValues } from "react-hook-form";
 import { Condition } from "./model/conditions";
 import type { FormField } from "./model/field";
 
@@ -8,39 +9,42 @@ import type { FormField } from "./model/field";
  * @param requiredFields - Um registro de campos obrigatórios com seus respectivos valores.
  * @returns `true` se pelo menos uma regra for válida, ou `true` se não houver regras definidas.
  */
-export function isRulesValid(
-  config: FormField,
-  requiredFields: Record<string, any>
+export function isRulesValid<TFieldValues extends FieldValues>(
+	config: FormField,
+	requiredFields: Record<string, any>,
+	dirtyFields: Partial<Readonly<FieldNamesMarkedBoolean<TFieldValues>>>,
 ): boolean {
-  // Verifica se o objeto de configuração tem regras definidas.
+	// Verifica se o objeto de configuração tem regras definidas.
 
-  if (!config.rules) return true;
-  if (config.rules.length === 0) return true;
+	if (!config.rules) return true;
+	if (config.rules.length === 0) return true;
 
-  // Utiliza o método 'some()' para verificar se pelo menos uma regra é válida.
-  return config.rules.some((rule) => {
-    // Verifica se o valor da regra não é indefinido ou nulo.
-    if (rule.value === undefined || rule.value === null) return false;
+	console.log("dirtyFields", dirtyFields);
 
-    // Obtém o valor do campo dependente.
-    const dependentFieldValue = requiredFields[rule.dependentFieldName];
+	// Utiliza o método 'some()' para verificar se pelo menos uma regra é válida.
+	return config.rules.some((rule) => {
+		// Verifica se o valor da regra não é indefinido ou nulo.
+		if (rule.value === undefined || rule.value === null) return false;
 
-    // Avalia a condição da regra em relação ao valor do campo dependente.
-    switch (rule.condition) {
-      case Condition.MAJOR:
-        return dependentFieldValue > rule.value;
-      case Condition.MINOR:
-        return dependentFieldValue < rule.value;
-      case Condition.EQUALS:
-        return dependentFieldValue === rule.value;
-      case Condition.DIFFERENT:
-        return dependentFieldValue !== rule.value;
-      case Condition.MAJOR_OR_EQUAL:
-        return dependentFieldValue >= rule.value;
-      case Condition.MINOR_OR_EQUAL:
-        return dependentFieldValue <= rule.value;
-      default:
-        return false; // Se a condição não for reconhecida, a regra é considerada inválida.
-    }
-  });
+		// Obtém o valor do campo dependente.
+		const dependentFieldValue = requiredFields[rule.dependentFieldName];
+
+		// Avalia a condição da regra em relação ao valor do campo dependente.
+		switch (rule.condition) {
+			case Condition.MAJOR:
+				return dependentFieldValue > rule.value;
+			case Condition.MINOR:
+				return dependentFieldValue < rule.value;
+			case Condition.EQUALS:
+				return dependentFieldValue === rule.value;
+			case Condition.DIFFERENT:
+				return dependentFieldValue !== rule.value;
+			case Condition.MAJOR_OR_EQUAL:
+				return dependentFieldValue >= rule.value;
+			case Condition.MINOR_OR_EQUAL:
+				return dependentFieldValue <= rule.value;
+			default:
+				return false; // Se a condição não for reconhecida, a regra é considerada inválida.
+		}
+	});
 }
