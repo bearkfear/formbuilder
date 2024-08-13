@@ -1,14 +1,17 @@
-import type { Control } from "react-hook-form";
+import type { Control, FieldPath, FieldValues } from "react-hook-form";
 import type { FormField } from "./field";
 import type { FormRenderProps } from "./form-render-props";
 
-export interface FormConfig<TName = string> {
-  fields: FormField<TName>[];
-  control: Control<any>;
-  shouldUnregister?: boolean;
-  requiredFields?: Record<string, any>;
-  onChangeField?: (name: string, value: any) => void;
-  render: (props: FormRenderProps) => React.ReactNode;
+export interface FormConfig<
+	TFieldValues extends FieldValues = FieldValues,
+	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> {
+	fields: FormField<TFieldValues, TName>[];
+	control: Control<TFieldValues>;
+	shouldUnregister?: boolean;
+	requiredFields?: Record<string, any>;
+	onChangeField?: (name: string, value: any) => void;
+	render: (props: FormRenderProps<TFieldValues>) => React.ReactNode;
 }
 
 export type FormType = Record<FormField["name"], any>;

@@ -1,4 +1,4 @@
-import { Controller } from "react-hook-form";
+import { Controller, type FieldPath, type FieldValues } from "react-hook-form";
 import type { FormConfig } from "./model/form-config";
 import { isRulesValid } from "./utilities";
 import { validateField } from "./validations";
@@ -6,12 +6,15 @@ import { type Store, useFormStoreApi } from "./use-form-store";
 import type { FormField } from "./model/field";
 import { useEffect, useMemo } from "react";
 
-export type FieldControllerProps = Omit<FormConfig, "fields"> & {
-	fieldConfig: FormField<string>;
+export type FieldControllerProps<
+	TFieldValues extends FieldValues = FieldValues,
+	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> = Omit<FormConfig<TFieldValues>, "fields"> & {
+	fieldConfig: FormField<TFieldValues, TName>;
 	formStoreApi: Store;
 };
 
-function FieldController({
+function FieldController<TFieldValues extends FieldValues = FieldValues>({
 	formStoreApi,
 	fieldConfig,
 	requiredFields,
@@ -19,7 +22,7 @@ function FieldController({
 	shouldUnregister,
 	onChangeField,
 	render: RenderItem,
-}: FieldControllerProps) {
+}: FieldControllerProps<TFieldValues>) {
 	const fieldState = formStoreApi.getState()[fieldConfig.name];
 
 	const isActive = useMemo(() => {
@@ -27,7 +30,7 @@ function FieldController({
 			fieldConfig.hidden ||
 			isRulesValid(fieldConfig, requiredFields || {}) === false
 		) {
-			false;
+			return false;
 		}
 
 		return true;
@@ -64,7 +67,10 @@ function FieldController({
 	);
 }
 
-export function FormFields({ fields, ...props }: FormConfig) {
+export function FormFields<TFieldValues extends FieldValues = FieldValues>({
+	fields,
+	...props
+}: FormConfig<TFieldValues>) {
 	const formStoreApi = useFormStoreApi();
 
 	return (
