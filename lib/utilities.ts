@@ -8,7 +8,7 @@ import type { FormField } from "./model/field";
  * @param requiredFields - Um registro de campos obrigatórios com seus respectivos valores.
  * @returns `true` se pelo menos uma regra for válida, ou `true` se não houver regras definidas.
  */
-export function isRulesValid(
+export function validateRules(
   config: FormField,
   requiredFields: Record<string, any>
 ): boolean {

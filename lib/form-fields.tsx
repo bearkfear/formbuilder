@@ -1,10 +1,10 @@
 import { Controller, type FieldPath, type FieldValues } from "react-hook-form";
 import type { FormConfig } from "./model/form-config";
-import { isRulesValid } from "./utilities";
+import { validateRules } from "./utilities";
 import { validateField } from "./validations";
 import { type Store, useFormStoreApi } from "./use-form-store";
 import type { FormField } from "./model/field";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 export type FieldControllerProps<
 	TFieldValues extends FieldValues = FieldValues,
@@ -17,7 +17,7 @@ export type FieldControllerProps<
 function FieldController<TFieldValues extends FieldValues = FieldValues>({
 	formStoreApi,
 	fieldConfig,
-	requiredFields,
+	requiredFields = {},
 	control,
 	shouldUnregister,
 	onChangeField,
@@ -28,30 +28,15 @@ function FieldController<TFieldValues extends FieldValues = FieldValues>({
 	const isActive = useMemo(() => {
 		if (
 			fieldConfig.hidden ||
-			isRulesValid(fieldConfig, requiredFields || {}) === false ||
-			!fieldState ||
-			(fieldState && fieldState.active === false)
+			validateRules(fieldConfig, requiredFields) === false
 		) {
 			return false;
 		}
 
 		return true;
-	}, [requiredFields, fieldConfig, fieldState]);
+	}, [requiredFields, fieldConfig]);
 
-	useEffect(() => {
-		if (!fieldState) {
-			formStoreApi.setState(() => ({
-				[fieldConfig.name]: { active: true },
-			}));
-			return;
-		}
-
-		if (fieldState.active !== isActive) {
-			formStoreApi.setState(() => ({
-				[fieldConfig.name]: { active: isActive },
-			}));
-		}
-	}, [formStoreApi, fieldState, isActive, fieldConfig]);
+	if (!isActive) return null;
 
 	return (
 		<Controller
