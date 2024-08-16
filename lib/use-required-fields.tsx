@@ -1,8 +1,6 @@
 import type { UseFormWatch } from "react-hook-form";
 import { useMemo } from "react";
 import type { FormField } from "./model/field";
-import { useFormStoreApi } from "./use-form-store";
-import { useStore } from "zustand";
 
 function getRequiredFieldNames(fields: FormField[][]) {
 	return fields.reduce<string[]>((acc, curr) => {
@@ -21,10 +19,6 @@ export function useRequiredFieldsByRules(
 	watch?: UseFormWatch<any>,
 	...fields: FormField[][]
 ): Record<string, any> {
-	const formStoreApi = useFormStoreApi();
-
-	const formStoreState = useStore(formStoreApi);
-
 	return useMemo(() => {
 		if (!watch) {
 			console.warn("watch is required");
@@ -36,17 +30,12 @@ export function useRequiredFieldsByRules(
 
 		const requiredFieldValues = watch(requiredFieldNames);
 
-		return requiredFieldValues.reduce<
-			Record<string, { value: any; active: boolean }>
-		>((acc, curr, index) => {
-			acc[requiredFieldNames[index]] = {
-				active:
-					!formStoreState[requiredFieldNames[index]] ||
-					(formStoreState[requiredFieldNames[index]] &&
-						formStoreState[requiredFieldNames[index]].active),
-				value: curr,
-			};
-			return acc;
-		}, {});
-	}, [fields, watch, formStoreState]);
+		return requiredFieldValues.reduce<Record<string, any>>(
+			(acc, curr, index) => {
+				acc[requiredFieldNames[index]] = curr;
+				return acc;
+			},
+			{},
+		);
+	}, [fields, watch]);
 }

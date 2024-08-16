@@ -2,48 +2,46 @@ import { Controller, type FieldPath, type FieldValues } from "react-hook-form";
 import type { FormConfig } from "./model/form-config";
 import { validateRules } from "./utilities";
 import { validateField } from "./validations";
-import { type Store, useFormStoreApi } from "./use-form-store";
 import type { FormField } from "./model/field";
-import { useMemo } from "react";
+import { useEffect } from "react";
+import { useFormStoreApi } from "./use-form-store";
 
 export type FieldControllerProps<
 	TFieldValues extends FieldValues = FieldValues,
 	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = Omit<FormConfig<TFieldValues>, "fields"> & {
 	fieldConfig: FormField<TFieldValues, TName>;
-	formStoreApi: Store;
 };
 
 function FieldController<TFieldValues extends FieldValues = FieldValues>({
-	formStoreApi,
 	fieldConfig,
 	requiredFields = {},
 	control,
-	shouldUnregister,
 	onChangeField,
 	render: RenderItem,
 }: FieldControllerProps<TFieldValues>) {
-	const fieldState = formStoreApi.getState()[fieldConfig.name];
+	const storeApi = useFormStoreApi();
 
-	const isActive = useMemo(() => {
-		if (
+	useEffect(() => {
+		const isHidden =
 			fieldConfig.hidden ||
-			validateRules(fieldConfig, requiredFields) === false
-		) {
-			return false;
-		}
+			validateRules(fieldConfig, requiredFields, storeApi.getState()) === false;
 
-		return true;
-	}, [requiredFields, fieldConfig]);
+		storeApi.setState(() => {
+			return {
+				[fieldConfig.name]: { active: isHidden === false },
+			};
+		});
+	}, [fieldConfig, requiredFields, storeApi]);
 
-	if (!isActive) return null;
+	const fieldState = storeApi((selector) => selector[fieldConfig.name]);
 
+	if (!fieldState || fieldState.active === false) return null;
 	return (
 		<Controller
 			key={fieldConfig.name}
 			name={fieldConfig.name}
 			control={control}
-			shouldUnregister={shouldUnregister}
 			rules={{ validate: (value) => validateField(value, fieldConfig) }}
 			render={({ fieldState, field }) => (
 				<RenderItem
@@ -58,8 +56,6 @@ export function FormFields<TFieldValues extends FieldValues = FieldValues>({
 	fields,
 	...props
 }: FormConfig<TFieldValues>) {
-	const formStoreApi = useFormStoreApi();
-
 	return (
 		<>
 			{fields.map((fieldConfig) => (
@@ -67,7 +63,6 @@ export function FormFields<TFieldValues extends FieldValues = FieldValues>({
 					{...props}
 					key={fieldConfig.name}
 					fieldConfig={fieldConfig}
-					formStoreApi={formStoreApi}
 				/>
 			))}
 		</>

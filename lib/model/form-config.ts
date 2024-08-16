@@ -8,7 +8,6 @@ export interface FormConfig<
 > {
 	fields: FormField<TFieldValues, TName>[];
 	control: Control<TFieldValues>;
-	shouldUnregister?: boolean;
 	requiredFields?: Record<string, any>;
 	onChangeField?: (name: string, value: any) => void;
 	render: (props: FormRenderProps<TFieldValues>) => React.ReactNode;

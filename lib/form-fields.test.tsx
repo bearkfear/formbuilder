@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import type { FormRenderProps } from "./model/form-render-props";
 import userEvent from "@testing-library/user-event";
 import { FormStoreProvider } from "./use-form-store";
+import type { FormField } from "./model/field";
 
 function SimpleRender(props: FormRenderProps<any>) {
 	if (props.fieldConfig.type === "text") {
@@ -45,7 +46,7 @@ function ExampleForm() {
 			label: "2",
 			name: "two",
 			size: 12,
-			type: "select",
+			type: "text",
 			rules: [
 				{
 					dependentFieldName: "one",
@@ -54,7 +55,7 @@ function ExampleForm() {
 				},
 			],
 		},
-	];
+	] satisfies FormField<any>[];
 
 	const requiredFieldsByRules = useRequiredFieldsByRules(form.watch, fields);
 
@@ -75,30 +76,52 @@ const ExampleFormWithProvider = () => (
 );
 
 describe("form fields form builder", () => {
-	// it("should render one field and two field", async () => {
-	// 	const { container } = render(<ExampleFormWithProvider />);
-
-	// 	const input = container.querySelector("#one");
-
-	// 	if (!input) throw new Error("Should find element `one`");
-	// 	const input2 = container.querySelector("#two");
-
-	// 	await userEvent.type(input, "1");
-
-	// 	expect(input).toBeTruthy();
-	// 	expect(input2).toBeTruthy();
-	// });
-
-	it("should render the field `one` only", async () => {
+	it("should render one field and two field", async () => {
 		const { container } = render(<ExampleFormWithProvider />);
 
 		const input = container.querySelector("#one");
-		if (!input) throw new Error("Should find element `one`");
-		const input2 = container.querySelector("#two");
 
-		await userEvent.type(input, "2");
+		if (!input) throw new Error("Should find element `one`");
+
+		{
+			const input2 = container.querySelector("#two");
+			expect(input2).toBeFalsy();
+		}
+
+		await userEvent.type(input, "1");
+
+		{
+			const input2 = container.querySelector<HTMLInputElement>("#two");
+			expect(input2).toBeTruthy();
+			if (!input2) throw new Error("Should find element `one`");
+			await userEvent.type(input2, "2");
+		}
+
+		{
+			const input2 = container.querySelector<HTMLInputElement>("#two");
+			if (!input2) throw new Error("Should find element `one`");
+			expect(input2.value).toBe("2");
+		}
+
+		await userEvent.type(input, "{Backspace}1");
+
+		const input2 = container.querySelector<HTMLInputElement>("#two");
+		if (!input2) throw new Error("Should find element `one`");
 
 		expect(input).toBeTruthy();
-		expect(input2).toBeFalsy();
+		expect(input2.value).toEqual("2");
 	});
+
+	// it("should render the field `one` only", async () => {
+	// 	const { container } = render(<ExampleFormWithProvider />);
+
+	// 	const input = container.querySelector("#one");
+	// 	if (!input) throw new Error("Should find element `one`");
+	// 	const input2 = container.querySelector("#two");
+
+	// 	await userEvent.type(input, "2");
+
+	// 	expect(input).toBeTruthy();
+	// 	expect(input2).toBeFalsy();
+	// });
 });
