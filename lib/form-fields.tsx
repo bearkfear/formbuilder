@@ -23,13 +23,16 @@ function FieldController<TFieldValues extends FieldValues = FieldValues>({
 	const storeApi = useFormStoreApi();
 
 	useEffect(() => {
-		const isHidden =
-			fieldConfig.hidden ||
-			validateRules(fieldConfig, requiredFields, storeApi.getState()) === false;
+		const isActive =
+			!fieldConfig.hidden &&
+			validateRules(fieldConfig, requiredFields, storeApi.getState());
 
+		if (storeApi.getState()[fieldConfig.name]?.active === isActive) {
+			return;
+		}
 		storeApi.setState(() => {
 			return {
-				[fieldConfig.name]: { active: isHidden === false },
+				[fieldConfig.name]: { active: isActive },
 			};
 		});
 	}, [fieldConfig, requiredFields, storeApi]);

@@ -112,16 +112,16 @@ describe("form fields form builder", () => {
 		expect(input2.value).toEqual("2");
 	});
 
-	// it("should render the field `one` only", async () => {
-	// 	const { container } = render(<ExampleFormWithProvider />);
+	it("should render the field `one` only", async () => {
+		const { container } = render(<ExampleFormWithProvider />);
 
-	// 	const input = container.querySelector("#one");
-	// 	if (!input) throw new Error("Should find element `one`");
-	// 	const input2 = container.querySelector("#two");
+		const input = container.querySelector("#one");
+		if (!input) throw new Error("Should find element `one`");
+		const input2 = container.querySelector("#two");
 
-	// 	await userEvent.type(input, "2");
+		await userEvent.type(input, "2");
 
-	// 	expect(input).toBeTruthy();
-	// 	expect(input2).toBeFalsy();
-	// });
+		expect(input).toBeTruthy();
+		expect(input2).toBeFalsy();
+	});
 });
