@@ -76,7 +76,7 @@ const ExampleFormWithProvider = () => (
 );
 
 describe("form fields form builder", () => {
-	it("should render one field and two field", async () => {
+	it("should render the one field and two field validating rules", async () => {
 		const { container } = render(<ExampleFormWithProvider />);
 
 		const input = container.querySelector("#one");
@@ -114,6 +114,21 @@ describe("form fields form builder", () => {
 
 	it("should render the field `one` only", async () => {
 		const { container } = render(<ExampleFormWithProvider />);
+
+		const input = container.querySelector("#one");
+		if (!input) throw new Error("Should find element `one`");
+		const input2 = container.querySelector("#two");
+
+		await userEvent.type(input, "2");
+
+		expect(input).toBeTruthy();
+		expect(input2).toBeFalsy();
+	});
+
+
+
+	it("should render the field `one` without the provider", async () => {
+		const { container } = render(<ExampleForm />);
 
 		const input = container.querySelector("#one");
 		if (!input) throw new Error("Should find element `one`");
