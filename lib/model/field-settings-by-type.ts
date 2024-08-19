@@ -10,7 +10,13 @@ export type FieldSettingsByType =
 			type: "email" | "password" | "textarea" | "editor";
 			autoComplete?: string;
 	  }
-	| { type: "checkbox" | "switch"; trueLabel?: string; falseLabel?: string }
+	| {
+			type: "checkbox" | "switch";
+			valueLabels?: {
+				true: string;
+				false: string;
+			};
+	  }
 	| {
 			type: "money" | "date";
 	  }

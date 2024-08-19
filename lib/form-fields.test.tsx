@@ -125,8 +125,6 @@ describe("form fields form builder", () => {
 		expect(input2).toBeFalsy();
 	});
 
-
-
 	it("should render the field `one` without the provider", async () => {
 		const { container } = render(<ExampleForm />);
 
