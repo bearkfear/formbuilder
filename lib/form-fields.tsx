@@ -1,3 +1,5 @@
+"use client";
+
 import { Controller, type FieldPath, type FieldValues } from "react-hook-form";
 import type { FormConfig } from "./model/form-config";
 import { validateRules } from "./utilities";

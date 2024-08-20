@@ -5,8 +5,7 @@ import type {
 	FieldPath,
 	FieldValues,
 } from "react-hook-form";
-import type { FormField } from "./field";
-import type { FormType } from "./form-config";
+import type { FormField } from "./field"; 
 
 export type FormRenderProps<
 	TFieldValues extends FieldValues = FieldValues,

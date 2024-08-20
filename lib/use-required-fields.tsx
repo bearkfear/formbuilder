@@ -1,3 +1,5 @@
+"use client";
+
 import type { UseFormWatch } from "react-hook-form";
 import { useMemo } from "react";
 import type { FormField } from "./model/field";

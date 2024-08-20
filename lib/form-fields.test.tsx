@@ -21,6 +21,7 @@ function SimpleRender(props: FormRenderProps<any>) {
 				data-testid={props.field.name}
 				onBlur={props.field.onBlur}
 				disabled={props.field.disabled}
+				name={props.field.name}
 			/>
 		);
 	}
@@ -69,11 +70,38 @@ function ExampleForm() {
 	);
 }
 
+function StressForm() {
+	const form = useForm<any>({
+		defaultValues: {},
+	});
+
+	return (
+		<FormFields
+			render={SimpleRender}
+			control={form.control}
+			fields={new Array(1000).fill(0).map((_, index) => ({
+				type: "text",
+				label: `${index}_field`,
+				size: 4,
+				name: `${index}_field`,
+			}))}
+		/>
+	);
+}
+
 const ExampleFormWithProvider = () => (
 	<FormStoreProvider>
 		<ExampleForm />
 	</FormStoreProvider>
 );
+
+const StreeFormWithProvider = () => {
+	return (
+		<FormStoreProvider>
+			<StressForm />
+		</FormStoreProvider>
+	);
+};
 
 describe("form fields form builder", () => {
 	it("should render the one field and two field validating rules", async () => {
@@ -136,5 +164,15 @@ describe("form fields form builder", () => {
 
 		expect(input).toBeTruthy();
 		expect(input2).toBeFalsy();
+	});
+
+	it("should be possibly render 1000 fields", async () => {
+		const { container } = render(<StreeFormWithProvider />);
+
+		const fields = Array.from(
+			container.querySelectorAll<HTMLInputElement>("input"),
+		).map((field) => field.name);
+
+		expect(fields.length).toBe(1000);
 	});
 });
