@@ -34,4 +34,7 @@ export type FieldSettingsByType =
 	| {
 			type: "radio";
 			options?: Option[];
+	  }
+	| {
+			type: "file";
 	  };
