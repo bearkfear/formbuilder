@@ -37,4 +37,5 @@ export type FieldSettingsByType =
 	  }
 	| {
 			type: "file";
+			multiple?: boolean;
 	  };
