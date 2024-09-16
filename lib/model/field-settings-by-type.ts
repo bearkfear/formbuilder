@@ -18,7 +18,7 @@ export type FieldSettingsByType =
 			};
 	  }
 	| {
-			type: "money" | "date";
+			type: "money" | "date" | "color";
 	  }
 	| {
 			type: "number";
