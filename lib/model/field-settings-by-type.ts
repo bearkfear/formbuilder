@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Option } from "./option";
 
 export type FieldSettingsByType =
@@ -5,6 +6,8 @@ export type FieldSettingsByType =
 			type: "text";
 			masks?: string | string[];
 			maxLength?: number;
+			suffix?: ReactNode;
+			prefix?: ReactNode;
 	  }
 	| {
 			type: "email" | "password" | "textarea" | "editor";
@@ -18,11 +21,17 @@ export type FieldSettingsByType =
 			};
 	  }
 	| {
-			type: "money" | "date" | "color";
+			type: "money" | "color";
+	  }
+	| {
+			type: "date";
+			min?: Date;
+			max?: Date;
 	  }
 	| {
 			type: "number";
-			maxLength?: number;
+			min?: number;
+			max?: number;
 	  }
 	| {
 			type: "multi-select" | "select";

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { FormField } from "./model/field";
 import type { ValidateResult } from "react-hook-form";
+import { format } from "date-fns";
 
 export function validateField(
 	value: any,
@@ -16,73 +17,168 @@ export function validateField(
 				.string({ required_error: requiredError })
 				.email(`O campo ${fieldConfig.label} não possui um e-mail valido.`);
 			break;
-		case "password":
-			validation = z
-				.string({ required_error: requiredError })
-				.min(
+		case "password": {
+			let defaultPasswordValidation = z.string({
+				required_error: requiredError,
+			});
+
+			if (fieldConfig.required) {
+				defaultPasswordValidation = defaultPasswordValidation.min(
 					6,
 					`O campo ${fieldConfig.label} precisa ter ao menos 6 caracteres.`,
 				);
+			}
+
+			validation = defaultPasswordValidation;
 			break;
-		case "text":
-			validation = z
+		}
+		case "text": {
+			let defaultTextValidation = z
 				.string({ required_error: requiredError })
-				.min(1, requiredError);
+				.trim();
+
+			if (fieldConfig.required) {
+				defaultTextValidation = defaultTextValidation.min(1, requiredError);
+			}
+
+			validation = defaultTextValidation;
 			break;
-		case "select":
-			validation = z
+		}
+		case "select": {
+			let defaultOptionsValidation = z
 				.string({ required_error: requiredError })
-				.min(1, requiredError)
-				.or(z.number())
-				.refine(
-					(val: any) =>
+				.or(z.number({ required_error: requiredError }));
+
+			if (fieldConfig.required) {
+				defaultOptionsValidation = z
+					.string({ required_error: requiredError })
+					.min(1, requiredError)
+					.or(z.number({ required_error: requiredError }));
+			}
+
+			validation = defaultOptionsValidation.refine(
+				(val: any) =>
+					!val ||
+					fieldConfig.options?.some(
+						(options) => options.value.toString() === val.toString(),
+					),
+				"Selecione uma opção válida",
+			);
+			break;
+		}
+		case "multi-select": {
+			let defaultMultiOptionsValidation = z
+				.union([z.string(), z.number()])
+				.array();
+
+			if (fieldConfig.required) {
+				defaultMultiOptionsValidation = defaultMultiOptionsValidation.min(
+					1,
+					requiredError,
+				);
+			}
+
+			validation = defaultMultiOptionsValidation.refine(
+				(val: any[]) =>
+					val.length === 0 ||
+					!val ||
+					val.every((v) =>
 						fieldConfig.options?.some(
-							(options) => options.value.toString() === val.toString(),
+							(option) => option.value.toString() === v.toString(),
 						),
-					"Selecione uma opção válida",
-				);
+					),
+				{
+					message: "Selecione ao menos uma opção válida",
+				},
+			);
 			break;
-		case "multi-select":
-			validation = z
-				.array(z.union([z.string(), z.number()]))
-				.nonempty(requiredError)
-				.refine(
-					(val: any[]) =>
-						val.every((v) =>
-							fieldConfig.options?.some(
-								(option) => option.value.toString() === v.toString(),
-							),
-						),
-					{
-						message: "Selecione ao menos uma opção válida",
-					},
-				);
-			break;
-		case "date":
-			validation = z.string({
+		}
+		case "date": {
+			let defaultDateValidation = z.date({
 				required_error: requiredError,
 				description: requiredError,
 				invalid_type_error: requiredError,
 			});
+
+			if (fieldConfig.min !== undefined) {
+				defaultDateValidation = defaultDateValidation.min(
+					new Date(
+						fieldConfig.min.getFullYear(),
+						fieldConfig.min.getMonth(),
+						fieldConfig.min.getDate(),
+					),
+					`O campo ${fieldConfig.label} não atende a data mínima de ${format(fieldConfig.min, "dd/MM/yyyy")}`,
+				);
+			}
+
+			if (fieldConfig.max !== undefined) {
+				defaultDateValidation = defaultDateValidation.max(
+					new Date(
+						fieldConfig.max.getFullYear(),
+						fieldConfig.max.getMonth(),
+						fieldConfig.max.getDate(),
+					),
+					`O campo ${fieldConfig.label} não atende a data máxima de ${format(fieldConfig.max, "dd/MM/yyyy")}`,
+				);
+			}
+
+			validation = defaultDateValidation.refine(
+				(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
+				requiredError,
+			);
+
 			break;
-		case "number":
-			validation = z.coerce.number({
+		}
+		case "number": {
+			let defaultNumberValidation = z.coerce.number({
 				required_error: requiredError,
 				invalid_type_error: requiredError,
 			});
+
+			if (fieldConfig.min !== undefined) {
+				defaultNumberValidation = defaultNumberValidation.min(
+					fieldConfig.min,
+					`O campo ${fieldConfig.label} não atende o valor mínimo de ${fieldConfig.min}`,
+				);
+			}
+
+			if (fieldConfig.max !== undefined) {
+				defaultNumberValidation = defaultNumberValidation.max(
+					fieldConfig.max,
+					`O campo ${fieldConfig.label} não atende o valor máximo de ${fieldConfig.max}`,
+				);
+			}
+
+			validation = defaultNumberValidation.refine(
+				(number) => !fieldConfig.required || Boolean(number),
+				requiredError,
+			);
+
 			break;
-		case "color":
-			validation = z
+		}
+		case "color": {
+			let defaultColorValidation = z
 				.string({ required_error: requiredError })
-				.min(1, requiredError)
-				.regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Informe uma cor válida");
+				.trim();
+
+			if (value) {
+				defaultColorValidation = defaultColorValidation.regex(
+					/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
+					"Informe uma cor válida",
+				);
+			}
+
+			if (fieldConfig.required) {
+				defaultColorValidation = defaultColorValidation.min(1, requiredError);
+			}
+
+			validation = defaultColorValidation;
 			break;
+		}
 		default:
 			validation = z.any();
 			break;
 	}
-
-	if (!fieldConfig.required) return true;
 
 	if (validation) {
 		if (!fieldConfig.required) {
@@ -94,5 +190,7 @@ export function validateField(
 				.map((issue) => issue.message)
 				.join("\n");
 		}
+
+		if (fieldConfig.validate) return fieldConfig.validate(value);
 	}
 }
