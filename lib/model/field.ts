@@ -19,6 +19,10 @@ export type FormField<
 	placeholder?: string;
 	helperText?: string;
 	className?: string;
+	backgroundColor?: string;
+	borderColor?: string;
+	textColor?: string;
+	textBold?: string;
 	/**
 	 * If returns true, whould activate field
 	 */

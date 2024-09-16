@@ -24,7 +24,15 @@ export type FieldSettingsByType =
 			type: "money" | "color";
 	  }
 	| {
-			type: "date";
+			type: "hyperlink";
+			formatText?: "uppercase" | "lowercase" | "capitalized";
+	  }
+	| {
+			type: "dynamic-checkbox";
+			checklist?: boolean;
+	  }
+	| {
+			type: "date" | "datetime";
 			min?: Date;
 			max?: Date;
 	  }
@@ -41,7 +49,7 @@ export type FieldSettingsByType =
 			options?: Option[];
 	  }
 	| {
-			type: "radio";
+			type: "radio" | "multi-checkbox";
 			options?: Option[];
 	  }
 	| {

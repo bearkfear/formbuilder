@@ -66,7 +66,8 @@ export function validateField(
 			);
 			break;
 		}
-		case "multi-select": {
+		case "multi-select":
+		case "multi-checkbox": {
 			let defaultMultiOptionsValidation = z
 				.union([z.string(), z.number()])
 				.array();
@@ -129,6 +130,44 @@ export function validateField(
 
 			break;
 		}
+		case "datetime": {
+			let defaultDateValidation = z.date({
+				required_error: requiredError,
+				description: requiredError,
+				invalid_type_error: requiredError,
+			});
+
+			if (fieldConfig.min !== undefined)
+				defaultDateValidation = defaultDateValidation.min(
+					new Date(
+						fieldConfig.min.getFullYear(),
+						fieldConfig.min.getMonth(),
+						fieldConfig.min.getDate(),
+						fieldConfig.min.getHours(),
+						fieldConfig.min.getMinutes(),
+					),
+					`O campo ${fieldConfig.label} não atende a data mínima de ${format(fieldConfig.min, "dd/MM/yyyy HH:mm")}`,
+				);
+
+			if (fieldConfig.max !== undefined)
+				defaultDateValidation = defaultDateValidation.max(
+					new Date(
+						fieldConfig.max.getFullYear(),
+						fieldConfig.max.getMonth(),
+						fieldConfig.max.getDate(),
+						fieldConfig.max.getHours(),
+						fieldConfig.max.getMinutes(),
+					),
+					`O campo ${fieldConfig.label} não atende a data máxima de ${format(fieldConfig.max, "dd/MM/yyyy HH:mm")}`,
+				);
+
+			validation = defaultDateValidation.refine(
+				(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
+				requiredError,
+			);
+
+			break;
+		}
 		case "number": {
 			let defaultNumberValidation = z.coerce.number({
 				required_error: requiredError,
@@ -173,6 +212,36 @@ export function validateField(
 			}
 
 			validation = defaultColorValidation;
+			break;
+		}
+		case "hyperlink": {
+			let defaultHyperlinkOptions = z
+				.object({
+					label: z.string(),
+					value: z.string(),
+				})
+				.array();
+
+			if (fieldConfig.required) {
+				defaultHyperlinkOptions = defaultHyperlinkOptions.min(1, requiredError);
+			}
+
+			validation = defaultHyperlinkOptions;
+			break;
+		}
+		case "dynamic-checkbox": {
+			let defaultDynamicOptions = z
+				.object({
+					label: z.string(),
+					value: z.boolean(),
+				})
+				.array();
+
+			if (fieldConfig.required) {
+				defaultDynamicOptions = defaultDynamicOptions.min(1, requiredError);
+			}
+
+			validation = defaultDynamicOptions;
 			break;
 		}
 		default:
