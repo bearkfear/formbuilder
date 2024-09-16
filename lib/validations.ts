@@ -15,6 +15,7 @@ export function validateField(
 		case "email":
 			validation = z
 				.string({ required_error: requiredError })
+				.trim()
 				.email(`O campo ${fieldConfig.label} não possui um e-mail valido.`);
 			break;
 		case "password": {
@@ -127,7 +128,6 @@ export function validateField(
 				(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
 				requiredError,
 			);
-
 			break;
 		}
 		case "datetime": {
@@ -165,9 +165,64 @@ export function validateField(
 				(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
 				requiredError,
 			);
-
 			break;
 		}
+		case "time":
+			validation = z
+				.date({
+					required_error: requiredError,
+					description: requiredError,
+					invalid_type_error: requiredError,
+				})
+				.refine(
+					(element) =>
+						fieldConfig.min === undefined ||
+						element.getHours() > fieldConfig.min.getHours() ||
+						(element.getHours() === fieldConfig.min.getHours() &&
+							element.getMinutes() >= fieldConfig.min.getMinutes()),
+					`O campo ${fieldConfig.label} não atende o tempo mínimo de ${format(fieldConfig.min || new Date(), "HH:mm")}`,
+				)
+				.refine(
+					(element) =>
+						fieldConfig.max === undefined ||
+						element.getHours() < fieldConfig.max.getHours() ||
+						(element.getHours() === fieldConfig.max.getHours() &&
+							element.getMinutes() <= fieldConfig.max.getMinutes()),
+					`O campo ${fieldConfig.label} não atende o tempo máximo de ${format(fieldConfig.max || new Date(), "HH:mm")}`,
+				)
+				.refine(
+					(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
+					requiredError,
+				);
+			break;
+		case "month":
+			validation = z
+				.date({
+					required_error: requiredError,
+					description: requiredError,
+					invalid_type_error: requiredError,
+				})
+				.refine(
+					(element) =>
+						fieldConfig.min === undefined ||
+						element.getFullYear() > fieldConfig.min.getFullYear() ||
+						(element.getFullYear() === fieldConfig.min.getFullYear() &&
+							element.getMonth() >= fieldConfig.min.getMonth()),
+					`O campo ${fieldConfig.label} não atende o período mínimo de ${format(fieldConfig.min || new Date(), "MM/yyyy")}`,
+				)
+				.refine(
+					(element) =>
+						fieldConfig.max === undefined ||
+						element.getFullYear() < fieldConfig.max.getFullYear() ||
+						(element.getFullYear() === fieldConfig.max.getFullYear() &&
+							element.getMonth() <= fieldConfig.max.getMonth()),
+					`O campo ${fieldConfig.label} não atende o período máximo de ${format(fieldConfig.max || new Date(), "MM/yyyy")}`,
+				)
+				.refine(
+					(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
+					requiredError,
+				);
+			break;
 		case "number": {
 			let defaultNumberValidation = z.coerce.number({
 				required_error: requiredError,
@@ -196,9 +251,7 @@ export function validateField(
 			break;
 		}
 		case "color": {
-			let defaultColorValidation = z
-				.string({ required_error: requiredError })
-				.trim();
+			let defaultColorValidation = z.string({ required_error: requiredError });
 
 			if (value) {
 				defaultColorValidation = defaultColorValidation.regex(
@@ -217,8 +270,25 @@ export function validateField(
 		case "hyperlink": {
 			let defaultHyperlinkOptions = z
 				.object({
-					label: z.string(),
-					value: z.string(),
+					label: z
+						.string()
+						.trim()
+						.transform((element) => {
+							if (fieldConfig.formatText) {
+								if (fieldConfig.formatText === "upperCase") {
+									return element.toUpperCase();
+								}
+								if (fieldConfig.formatText === "lowerCase") {
+									return element.toLowerCase();
+								}
+								return (
+									element.charAt(0).toUpperCase() +
+									element.slice(1).toLowerCase()
+								);
+							}
+							return element;
+						}),
+					value: z.string().trim(),
 				})
 				.array();
 
@@ -232,7 +302,7 @@ export function validateField(
 		case "dynamic-checkbox": {
 			let defaultDynamicOptions = z
 				.object({
-					label: z.string(),
+					label: z.string().trim(),
 					value: z.boolean(),
 				})
 				.array();

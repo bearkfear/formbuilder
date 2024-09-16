@@ -25,14 +25,11 @@ export type FieldSettingsByType =
 	  }
 	| {
 			type: "hyperlink";
-			formatText?: "uppercase" | "lowercase" | "capitalized";
+			formatText?: "upperCase" | "lowerCase" | "capitalized";
 	  }
 	| {
-			type: "dynamic-checkbox";
-			checklist?: boolean;
-	  }
-	| {
-			type: "date" | "datetime";
+			type: "datetime" | "time" | "date" | "month";
+			dateNow?: boolean;
 			min?: Date;
 			max?: Date;
 	  }
@@ -49,10 +46,28 @@ export type FieldSettingsByType =
 			options?: Option[];
 	  }
 	| {
-			type: "radio" | "multi-checkbox";
+			type: "radio";
 			options?: Option[];
+			position?: "vertical" | "horizontal";
+	  }
+	| {
+			type: "dynamic-checkbox";
+			checklist?: boolean;
+	  }
+	| {
+			type: "multi-checkbox";
+			options?: Option[];
+			checklist?: boolean;
+			position?: "vertical" | "horizontal";
 	  }
 	| {
 			type: "file";
 			multiple?: boolean;
+	  }
+	| {
+			type: "rate";
+			size?: "small" | "normal" | "medium" | "large";
+			max?: number;
+			showScore?: boolean;
+			showText?: string[];
 	  };
