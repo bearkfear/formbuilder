@@ -96,11 +96,7 @@ export function validateField(
 			break;
 		}
 		case "date": {
-			let defaultDateValidation = z.date({
-				required_error: requiredError,
-				description: requiredError,
-				invalid_type_error: requiredError,
-			});
+			let defaultDateValidation = z.date();
 
 			if (fieldConfig.min !== undefined) {
 				defaultDateValidation = defaultDateValidation.min(
@@ -131,11 +127,7 @@ export function validateField(
 			break;
 		}
 		case "datetime": {
-			let defaultDateValidation = z.date({
-				required_error: requiredError,
-				description: requiredError,
-				invalid_type_error: requiredError,
-			});
+			let defaultDateValidation = z.date();
 
 			if (fieldConfig.min !== undefined)
 				defaultDateValidation = defaultDateValidation.min(
@@ -169,11 +161,7 @@ export function validateField(
 		}
 		case "time":
 			validation = z
-				.date({
-					required_error: requiredError,
-					description: requiredError,
-					invalid_type_error: requiredError,
-				})
+				.date()
 				.refine(
 					(element) =>
 						fieldConfig.min === undefined ||
@@ -197,11 +185,7 @@ export function validateField(
 			break;
 		case "month":
 			validation = z
-				.date({
-					required_error: requiredError,
-					description: requiredError,
-					invalid_type_error: requiredError,
-				})
+				.date()
 				.refine(
 					(element) =>
 						fieldConfig.min === undefined ||
