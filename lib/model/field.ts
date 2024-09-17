@@ -19,6 +19,7 @@ export type FormField<
 	placeholder?: string;
 	helperText?: string;
 	className?: string;
+	style?: React.CSSProperties;
 	/**
 	 * If returns true, whould activate field
 	 */
