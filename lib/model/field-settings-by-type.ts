@@ -1,10 +1,20 @@
 import type { ReactNode } from "react";
 import type { Option } from "./option";
 
+type Tokens = Record<
+	string,
+	{
+		pattern?: RegExp;
+		transform?: (value: string) => string;
+		escape?: boolean;
+	}
+>;
+
 export type FieldSettingsByType =
 	| {
 			type: "text";
 			masks?: string | string[];
+			tokens?: Tokens;
 			maxLength?: number;
 			suffix?: ReactNode;
 			prefix?: ReactNode;
