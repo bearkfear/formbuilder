@@ -70,7 +70,7 @@ export function validateField(
 		case "switch":
 		case "checkbox": {
 			if (fieldConfig.required)
-				validation = z.literal(true, { required_error: requiredError });
+				validation = z.literal(true, { invalid_type_error: requiredError });
 			else validation = z.boolean({ required_error: requiredError });
 			break;
 		}
