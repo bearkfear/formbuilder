@@ -138,10 +138,7 @@ export function validateField(
 				);
 			}
 
-			validation = defaultDateValidation.refine(
-				(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
-				requiredError,
-			);
+			validation = defaultDateValidation;
 			break;
 		}
 		case "datetime": {
@@ -175,10 +172,7 @@ export function validateField(
 					`O campo ${fieldConfig.label} não atende a data máxima de ${format(fieldConfig.max, "dd/MM/yyyy HH:mm")}`,
 				);
 
-			validation = defaultDateValidation.refine(
-				(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
-				requiredError,
-			);
+			validation = defaultDateValidation;
 			break;
 		}
 		case "time":
@@ -203,10 +197,6 @@ export function validateField(
 						(element.getHours() === fieldConfig.max.getHours() &&
 							element.getMinutes() <= fieldConfig.max.getMinutes()),
 					`O campo ${fieldConfig.label} não atende o tempo máximo de ${format(fieldConfig.max || new Date(), "HH:mm")}`,
-				)
-				.refine(
-					(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
-					requiredError,
 				);
 			break;
 		case "month":
@@ -231,10 +221,6 @@ export function validateField(
 						(element.getFullYear() === fieldConfig.max.getFullYear() &&
 							element.getMonth() <= fieldConfig.max.getMonth()),
 					`O campo ${fieldConfig.label} não atende o período máximo de ${format(fieldConfig.max || new Date(), "MM/yyyy")}`,
-				)
-				.refine(
-					(date) => !fieldConfig.required || !Number.isNaN(date.getTime()),
-					requiredError,
 				);
 			break;
 		case "number": {
