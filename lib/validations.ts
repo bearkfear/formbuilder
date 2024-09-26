@@ -69,9 +69,16 @@ export function validateField(
 		}
 		case "switch":
 		case "checkbox": {
+			const defaultBooleanValidation = z.boolean({
+				required_error: requiredError,
+			});
+
 			if (fieldConfig.required)
-				validation = z.literal(true, { message: requiredError });
-			else validation = z.boolean({ required_error: requiredError });
+				validation = defaultBooleanValidation.refine(
+					(element) => element === true,
+					{ message: requiredError },
+				);
+			else validation = defaultBooleanValidation;
 			break;
 		}
 		case "multi-select":
