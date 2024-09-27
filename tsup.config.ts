@@ -14,12 +14,6 @@ export default defineConfig({
 	external: ["react", "react-dom"],
 	sourcemap: false,
 	dts: true,
-	format: ["cjs", "esm"],
-	outExtension(ctx) {
-		return {
-			js: ctx.format === "esm" ? ".mjs" : ".js",
-		};
-	},
 	clean: true,
 	bundle: false,
 	tsconfig: "./tsconfig.json",
