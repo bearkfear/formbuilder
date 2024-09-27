@@ -1,6 +1,6 @@
 {
 	"name": "@continha/formbuilder",
-	"version": "1.5.12",
+	"version": "1.5.13",
 	"description": "",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -8,10 +8,11 @@
 		"url": "https://github.com/bearkfear/formbuilder"
 	},
 	"scripts": {
-		"build": "tsc",
+		"build": "tsup",
 		"test": "vitest"
 	},
 	"keywords": [],
+	"type": "module",
 	"author": "camponogara5@gmail.com",
 	"license": "ISC",
 	"devDependencies": {
@@ -25,15 +26,16 @@
 		"@vitejs/plugin-react": "^4.3.1",
 		"@vitest/browser": "^2.0.5",
 		"jsdom": "^24.1.1",
+		"tsup": "^8.3.0",
 		"typescript": "^5.5.4",
 		"vitest": "^2.0.5"
 	},
 	"peerDependencies": {
+		"date-fns": "^4.0.0",
 		"react": "^18.3.1",
 		"react-hook-form": "^7.52.1",
 		"zod": "^3.23.8",
-		"zustand": "^4.5.4",
-		"date-fns": "^4.0.0"
+		"zustand": "^4.5.4"
 	},
 	"dependencies": {
 		"@continha/formbuilder": "link:"
