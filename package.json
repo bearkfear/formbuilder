@@ -1,9 +1,16 @@
 {
 	"name": "@continha/formbuilder",
-	"version": "1.5.13",
+	"version": "1.5.14",
 	"description": "",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		}
+	},
 	"repository": {
 		"url": "https://github.com/bearkfear/formbuilder"
 	},
@@ -12,7 +19,6 @@
 		"test": "vitest"
 	},
 	"keywords": [],
-	"type": "module",
 	"author": "camponogara5@gmail.com",
 	"license": "ISC",
 	"devDependencies": {
