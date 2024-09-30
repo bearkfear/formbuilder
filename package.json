@@ -1,6 +1,6 @@
 {
 	"name": "@continha/formbuilder",
-	"version": "1.5.17",
+	"version": "1.5.18",
 	"description": "",
 	"main": "./dist/index.js",
 	"module": "dist/index.mjs",
@@ -10,15 +10,9 @@
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.mjs",
 			"require": "./dist/index.js"
-		},
-		"./dist/styles/globals.css": {
-			"import": "./dist/styles/globals.css",
-			"require": "./dist/styles/globals.css"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"repository": {
 		"url": "https://github.com/bearkfear/formbuilder"
 	},
