@@ -79,13 +79,10 @@ export type FieldSettingsByType =
 			position?: "vertical" | "horizontal";
 	  }
 	| {
-			type: "file";
-			multiple?: boolean;
+			type: "rate";
+			max?: number;
 	  }
 	| {
-			type: "rate";
-			size?: "small" | "normal" | "medium" | "large";
-			max?: number;
-			showScore?: boolean;
-			showText?: string[];
+			type: "file";
+			multiple?: boolean;
 	  };
