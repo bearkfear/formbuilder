@@ -49,7 +49,15 @@ export type FieldSettingsByType =
 			max?: number;
 	  }
 	| {
-			type: "multi-select" | "select";
+			type: "select";
+			searchable?: boolean;
+			disableOption?: ((option: Option) => boolean) | Option["value"][];
+			extraActions?: React.ReactNode;
+			options?: Option[];
+	  }
+	| {
+			type: "multi-select";
+			checkAll?: boolean;
 			searchable?: boolean;
 			disableOption?: ((option: Option) => boolean) | Option["value"][];
 			extraActions?: React.ReactNode;
