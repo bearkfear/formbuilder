@@ -314,6 +314,21 @@ export function validateField(
 			validation = defaultDynamicOptions;
 			break;
 		}
+		case "rate":
+			validation = z.coerce
+				.number({
+					required_error: requiredError,
+					invalid_type_error: requiredError,
+				})
+				.max(
+					fieldConfig.max || 5,
+					`O campo ${fieldConfig.label} não atende o valor máximo de ${fieldConfig.max}`,
+				)
+				.refine(
+					(number) => !fieldConfig.required || Boolean(number),
+					requiredError,
+				);
+			break;
 		default:
 			validation = z.any();
 			break;
