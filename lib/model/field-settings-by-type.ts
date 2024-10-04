@@ -51,17 +51,23 @@ export type FieldSettingsByType =
 	| {
 			type: "select";
 			searchable?: boolean;
+			onSearch?: (search: string) => void;
 			disableOption?: ((option: Option) => boolean) | Option["value"][];
 			extraActions?: React.ReactNode;
 			options?: Option[];
+			page?: number;
+			onChangePage?: (page: number) => void;
 	  }
 	| {
 			type: "multi-select";
 			checkAll?: boolean;
 			searchable?: boolean;
+			onSearch?: (search: string) => void;
 			disableOption?: ((option: Option) => boolean) | Option["value"][];
 			extraActions?: React.ReactNode;
 			options?: Option[];
+			page?: number;
+			onChangePage?: (page: number) => void;
 	  }
 	| {
 			type: "radio";
