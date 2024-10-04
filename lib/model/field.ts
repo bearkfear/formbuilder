@@ -10,7 +10,7 @@ export type FormField<
 	hidden?: boolean;
 	validate?: (value: any) => ValidateFieldResult;
 	name: TName;
-	label: string;
+	label?: string;
 	required?: boolean;
 	leftAddon?: React.ReactNode; // Conteúdo para ser exibido à esquerda do rótulo
 	rightAddon?: React.ReactNode; // Conteúdo para ser exibido à direita do rótulo
