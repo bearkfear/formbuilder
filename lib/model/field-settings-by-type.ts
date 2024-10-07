@@ -58,6 +58,7 @@ export type FieldSettingsByType =
 			loadingOptions?: boolean;
 			page?: number;
 			onChangePage?: (page: number) => void;
+			onCloseSelect?: () => void;
 	  }
 	| {
 			type: "multi-select";
@@ -70,6 +71,7 @@ export type FieldSettingsByType =
 			loadingOptions?: boolean;
 			page?: number;
 			onChangePage?: (page: number) => void;
+			onCloseSelect?: () => void;
 	  }
 	| {
 			type: "radio";
